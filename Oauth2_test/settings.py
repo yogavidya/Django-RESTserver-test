@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'oauth2_provider',
     'corsheaders',
+    'sslserver',
+    'Oauth2_test',
 ]
 
 MIDDLEWARE = [
@@ -119,12 +121,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+USE_SSL = True
+
+SECURE_SSL_REDIRECT = True if USE_SSL else False
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+URL_SCHEME = 'https://' if USE_SSL else 'http://'
+
+
+LOGIN_REDIRECT_URL = URL_SCHEME + 'localhost:8000/o/authorize?'\
+                     'client_id=vtGlrl5jKEBS0i67wnSNsdx3w8ScQqsWSzkp2JzR'\
+                     '&response_type=code'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-LOGIN_REDIRECT_URL = 'http://localhost:8000/o/authorize?'\
-                     'client_id=vtGlrl5jKEBS0i67wnSNsdx3w8ScQqsWSzkp2JzR'\
-                     '&response_type=code'
