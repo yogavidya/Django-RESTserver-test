@@ -16,14 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.auth.views import LoginView
-from .views import oauth2_get_token, test_valid_session, ApiEndpoint
+from .views import oauth2_get_token
+from .apis import UserListCreate, UserDestroy
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('login/', LoginView.as_view(template_name='login.html')),
     path('access', oauth2_get_token),
-    # TODO: remove next route in production
-    path('test-valid-session', test_valid_session),
-    path('api', ApiEndpoint.as_view()),
+    path('users', UserListCreate.as_view()),
+    #re_path(r'^users/delete/([0-9]{1,10})', UserDestroy.as_view()),
+    path('users/delete/<pk>', UserDestroy.as_view()),
 ]

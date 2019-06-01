@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'oauth2_provider',
     'corsheaders',
     'sslserver',
@@ -62,6 +63,24 @@ AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+OAUTH2_PROVIDER = {
+    'SCOPES_BACKEND_CLASS': 'oauth2_provider.scopes.SettingsScopes',
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'},
+    'DEFAULT_SCOPES': ['read', 'write'],
+    'READ_SCOPE': 'read',
+    'WRITE_SCOPE': 'write',
+    'ALLOW_REDIRECT_URI_SCHEMES': ['https'],
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated'
+    )
+}
 
 ROOT_URLCONF = 'Oauth2_test.urls'
 
