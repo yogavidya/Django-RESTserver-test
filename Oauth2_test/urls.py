@@ -15,13 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from django.views.generic.base import TemplateView
 from django.contrib.auth.views import LoginView
-from .views import oauth2_get_token, test_valid_session
+from .views import oauth2_get_token, test_valid_session, ApiEndpoint
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('login/', LoginView.as_view(template_name='login.html')),
     path('access', oauth2_get_token),
-    path('test-valid-session', test_valid_session)
+    # TODO: remove next route in production
+    path('test-valid-session', test_valid_session),
+    path('api', ApiEndpoint.as_view()),
 ]
