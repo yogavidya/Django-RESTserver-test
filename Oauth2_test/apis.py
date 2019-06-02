@@ -161,7 +161,7 @@ class DroneViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(brand__icontains=brand)
         if serial_number is not None:
             queryset = \
-                queryset.filter(drone__serial_number__icontains=serial_number)
+                queryset.filter(serial_number__icontains=serial_number)
         if cameras_brand is not None:
             queryset = queryset.filter(cameras__brand__icontains=cameras_brand)
         if cameras_model is not None:
