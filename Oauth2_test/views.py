@@ -1,6 +1,6 @@
 import json
 import requests
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.conf import settings
 from django.shortcuts import redirect
 
@@ -22,6 +22,9 @@ def oauth2_get_token(request: HttpRequest):
         '?access_token={}' '&refresh_token={}')
     client_url = \
         client_url.format(content['access_token'], content['refresh_token'])
-    return redirect(client_url)
+    if settings.DEBUG:
+        return HttpResponse('access_token: {}'.format(content['access_token']))
+    else:
+        return redirect(client_url)
 
 
