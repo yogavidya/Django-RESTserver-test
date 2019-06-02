@@ -166,3 +166,4 @@ LOGIN_REDIRECT_URL = URL_SCHEME + 'localhost:8000/o/authorize?'\
 
 STATIC_URL = '/static/'
 
+CLIENT_APPLICATION_URL = 'https://localhost:4200'

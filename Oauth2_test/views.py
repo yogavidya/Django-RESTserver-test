@@ -1,7 +1,8 @@
 import json
 import requests
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.conf import settings
+from django.shortcuts import redirect
 
 
 def oauth2_get_token(request: HttpRequest):
@@ -17,11 +18,10 @@ def oauth2_get_token(request: HttpRequest):
             'approval_prompt': 'auto',
         })
     content = json.loads(token_endpoint_response.content)
-    # TODO : main entry point for a client application could be here
-    result = {'access_token': content['access_token'],
-              'refresh_token': content['refresh_token'],
-              'time_expire': content['expires_in'],
-              'scope': content['scope']}
-    return HttpResponse(json.dumps(result))
+    client_url = settings.CLIENT_APPLICATION_URL + (
+        '?access_token={}' '&refresh_token={}')
+    client_url = \
+        client_url.format(content['access_token'], content['refresh_token'])
+    return redirect(client_url)
 
 
