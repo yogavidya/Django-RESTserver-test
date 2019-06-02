@@ -98,7 +98,7 @@ def build_order_by(self):
 class CameraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Camera
-        fields = ('camera_model', 'sensor_mp', 'brand')
+        fields = ('id', 'camera_model', 'sensor_mp', 'brand')
 
 
 class CameraViewSet(viewsets.ModelViewSet):
@@ -132,7 +132,7 @@ class CameraViewSet(viewsets.ModelViewSet):
 class DroneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drone
-        fields = ('name', 'brand', 'serial_number', 'cameras')
+        fields = ('id', 'name', 'brand', 'serial_number', 'cameras')
 
 
 class DroneViewSet(viewsets.ModelViewSet):
