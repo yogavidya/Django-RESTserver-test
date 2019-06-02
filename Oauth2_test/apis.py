@@ -4,9 +4,10 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from oauth2_provider.contrib.rest_framework import TokenHasScope
 from rest_framework import routers, viewsets
-from django.db.models.functions import Coalesce
+from django.contrib.auth.models import Permission
 from typing import Any
 from Oauth2_test.models.models import Camera, Drone
+from functools import reduce
 
 valid_groups = {
     'Pix4D Employees': 'read',
@@ -14,20 +15,22 @@ valid_groups = {
 }
 
 
-def get_group_permissions(request: Request):
-    groups = [g.name for g in request.user.groups.all()]
-    group_permissions = [valid_groups[g] for g in
-                         filter(lambda g: g in valid_groups, groups)]
-    return group_permissions
+def has_permission(request, action, model):
+    user_permissions = list(
+        filter(
+            lambda p: 'Oauth2_test.'+action+'_'+model in p,
+            request.user.get_all_permissions()))
+    group_permissions = list(
+        filter(
+            lambda p: 'Oauth2_test.'+action+'_'+model in p,
+            request.user.get_group_permissions()))
+    return len(user_permissions) > 0 \
+           or len(group_permissions) > 0 \
+           or request.user.is_superuser
 
 
-def can_modify(request: Request):
-    group_permissions = get_group_permissions(request)
-    return 'write' in group_permissions
-
-
-def protected_create(self, request: Request, *args: Any, **kwargs: Any):
-    if not can_modify(request):
+def protected_create(self, request: Request, *args, **kwargs):
+    if not has_permission(request, 'create', self.basename):
         return HttpResponseForbidden()
     else:
         serializer = self.get_serializer(data=request.data)
@@ -44,7 +47,7 @@ def protected_create(self, request: Request, *args: Any, **kwargs: Any):
 
 
 def protected_update(self, request, *args, **kwargs):
-    if not can_modify(request):
+    if not has_permission(request, 'change', self.basename):
         return HttpResponseForbidden()
     else:
         partial = kwargs.pop('partial', False)
@@ -69,7 +72,7 @@ def protected_partial_update(self, request, *args, **kwargs):
 
 
 def protected_destroy(self, request, *args, **kwargs):
-    if not can_modify(request):
+    if not has_permission(request, 'delete', self.basename):
         return HttpResponseForbidden()
     else:
         instance = self.get_object()
