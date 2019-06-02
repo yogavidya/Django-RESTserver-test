@@ -17,14 +17,12 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.auth.views import LoginView
 from .views import oauth2_get_token
-from .apis import UserListCreate, UserDestroy
+from .apis import api_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('login/', LoginView.as_view(template_name='login.html')),
     path('access', oauth2_get_token),
-    path('users', UserListCreate.as_view()),
-    #re_path(r'^users/delete/([0-9]{1,10})', UserDestroy.as_view()),
-    path('users/delete/<pk>', UserDestroy.as_view()),
-]
+    #path('users/delete/<pk>', UserDestroy.as_view()),
+] + api_urlpatterns
