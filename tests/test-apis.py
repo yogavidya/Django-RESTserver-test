@@ -1,6 +1,7 @@
 """
 There's no obvious way to test the OAuth2 flow, so I just test
 requests using an AccessToken I stole by hand.
+Modify access_token as needed.
 Run with `pytest -s --pdb --disable-warnings`
 """
 
